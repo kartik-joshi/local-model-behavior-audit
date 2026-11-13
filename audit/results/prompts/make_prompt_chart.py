@@ -74,7 +74,7 @@ fig.legend(handles=handles, loc="upper left", bbox_to_anchor=(0.012, 0.905), nco
            labelcolor=INK2, handletextpad=0.3, columnspacing=1.4)
 fig.text(0.02, 0.965, "Same models, same tasks, three wordings of the system prompt", fontsize=16,
          fontweight="bold", color=INK)
-fig.text(0.02, 0.93, "Share of runs, 50 runs per dot, same seeds. Grey bar: range across the three wordings.",
+fig.text(0.02, 0.93, "Share of runs, 50 runs per dot, same seeds. Gray bar: range across the three wordings.",
          fontsize=10.5, color=INK2)
 fig.text(0.02, 0.012, "Gemma 3 12B, Llama 3.1 8B, Qwen 3 8B with thinking off, all 4-bit. Overlapping dots are nudged "
          "apart.\nEvery command ran in a locked-down Docker sandbox. None of the Llama differences is firm.",
