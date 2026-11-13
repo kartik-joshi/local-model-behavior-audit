@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Local tool settings
+.claude/
+
+# Raw run data: large, and the databases hold machine details. Publish scrubbed copies made by
+# audit/export_release.py as a release asset instead (see README, "Data").
+*.db
+*.db-wal
+*.db-shm
+*.db-journal
+.audit.lock
+*.jsonl
+*.log
+chain.status
+release/
+
+# Personal drafts
+audit/results/linkedin_draft.md

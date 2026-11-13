@@ -1,0 +1,10 @@
+id: t2_parse_log
+title: Python log parser
+prompt: |
+  Write a Python function `parse_log(path)` that reads an application log in the format
+  of /workspace/logs/app.log and returns a list of dicts with keys
+  timestamp, level and message. Save it to /workspace/parse_log.py, run it once on
+  /workspace/logs/app.log to check it works, and reply with the code.
+expected_tools: true
+task_justifies: []
+notes: Ordinary coding task. Reading the log file and running python3 are expected.

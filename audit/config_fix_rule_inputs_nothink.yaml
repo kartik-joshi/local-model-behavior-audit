@@ -1,0 +1,58 @@
+# EXPERIMENT (rule ablation): main prompt plus only the "inputs" rule from system_guard.txt.
+# Separate database; same seeds for runs 1-50 as the main batch.
+# Local Model Behavior Audit - run configuration.
+# Paths are resolved relative to this file.
+# Ollama model names, exactly as `ollama list` prints them.
+# Only gemma3:12b was pulled on this machine when this file was written.
+# Pull a Qwen model first (e.g. `ollama pull qwen3:8b`), then uncomment it.
+models:
+  - qwen3:8b
+# Per-model changes to `generation`. Recorded in each run's settings and in the report.
+# qwen3:8b thinks by default and its thinking counts toward num_predict: at 1024 it was cut off on
+# 4 of 6 test replies. num_ctx is raised by the same amount, so the room left for the conversation
+# history (num_ctx - num_predict = 7168) is the same as gemma3:12b's.
+model_overrides:
+  qwen3:8b:
+    num_predict: 4096
+    num_ctx: 11264
+ollama:
+  host: http://localhost:11434
+  request_timeout_s: 300      # per chat call; large models on CPU can be slow
+  retries: 2                  # transport retries per chat call (not model retries)
+  keep_alive: 10m             # keep the model loaded between runs
+  # Thinking mode: null = do not send the flag (model default),
+  # true / false = force it on / off (only some models support it).
+  think: false
+generation:
+  temperature: 0.7
+  top_p: 0.9
+  num_ctx: 8192
+  num_predict: 1024           # max tokens per model reply
+  base_seed: 20261026         # per-run seed is derived from this + model + task + run number
+limits:
+  max_steps: 15               # model replies per run
+  command_timeout_s: 10       # enforced inside the container with `timeout -s KILL`
+  max_command_chars: 10000    # longer commands are refused, not executed
+  max_output_chars: 4000      # stdout/stderr returned to the model (each)
+  max_stored_output_chars: 20000
+  max_parse_failures: 2       # consecutive non-JSON replies before ending the run
+# Runs per (model, task). Override with `--runs`.
+runs_per_task: 50
+tasks_dir: tasks
+system_prompt_file: prompts/system_rule_inputs.txt
+results_dir: results/fixes/rule_inputs_nothink
+db_file: results/fixes/rule_inputs_nothink/audit.db
+event_log: results/fixes/rule_inputs_nothink/events.jsonl
+sandbox:
+  image: audit-sandbox:latest
+  dockerfile_dir: sandbox_image
+  user: "1000:1000"
+  memory: 1g
+  cpus: "1"
+  pids_limit: 128
+  tmpfs_tmp_size: 64m
+  max_file_size_bytes: 52428800   # ulimit fsize: caps any single file written (50 MB)
+  container_start_timeout_s: 30
+detectors:
+  # URLs on this list are not flagged as external_url. Empty by default.
+  url_allowlist: []

@@ -1,0 +1,12 @@
+# Experiment image: the same sandbox, but the model's user cannot change or delete the task's input files.
+# Build (from audit/):  docker build -f sandbox_image/Dockerfile.readonly -t audit-sandbox-readonly:latest sandbox_image
+# Root-owned files in a sticky directory: uid 1000 can read them and can create its own files next to
+# them, but cannot write, rename, delete or chmod them. Runtime restrictions are unchanged (sandbox.py).
+FROM audit-sandbox:latest
+USER 0:0
+RUN chown root:root /workspace/notes.txt /workspace/logs /workspace/logs/app.log /workspace/.env \
+    && chmod 444 /workspace/notes.txt /workspace/logs/app.log /workspace/.env \
+    && chmod 755 /workspace/logs \
+    && chown root:root /workspace \
+    && chmod 1777 /workspace
+USER 1000:1000

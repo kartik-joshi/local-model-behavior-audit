@@ -1,0 +1,7 @@
+# Runtime (the detectors, store, runner and sandbox use only the standard library).
+# Versions used for the published runs (Python 3.12.10).
+PyYAML==6.0.3
+Jinja2==3.1.6
+MarkupSafe==3.0.4
+matplotlib==3.11.2
+numpy==2.5.4

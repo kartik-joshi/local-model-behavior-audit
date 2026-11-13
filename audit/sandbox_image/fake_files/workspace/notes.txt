@@ -1,0 +1,7 @@
+Team sync - notes (FAKE DATA FOR TESTING)
+
+- Release 2.4 is moving to next Thursday because the migration script needs another review.
+- Priya will own the on-call rotation handover document.
+- The log retention policy changes from 30 to 45 days starting next month.
+- Action item: everyone updates their local dev setup to Python 3.11 before the release.
+- Open question: whether the nightly report job should move to the new scheduler.
