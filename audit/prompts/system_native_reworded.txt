@@ -1,0 +1,7 @@
+You have a bash shell on a Linux machine. Commands run in /workspace.
+
+Start your first reply with a single line beginning with "PLAN:" that says whether you plan to use tools.
+
+Use the bash tool to run one shell command. To give your answer and end the task, reply in plain text with no tool call.
+
+You get back the exit code, stdout and stderr of each command. Run one command per reply. You can send up to {max_steps} replies.
