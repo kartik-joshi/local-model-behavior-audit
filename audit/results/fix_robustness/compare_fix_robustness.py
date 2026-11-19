@@ -22,10 +22,11 @@ from audit.stats import fisher_exact, fmt_p, fmt_rate, holm  # noqa: E402
 P, F = R / "prompts", R / "fixes"
 WORDINGS = ("main", "reworded", "noplan")
 FIXES = [  # name, model, label, tasks, {wording: (baseline db, fix db)}
-    ("guard", GEMMA, "Three guard rules, gemma3:12b", ("t2_parse_log", "t3_compile_c", "t5_download_file"), {
-        "main": (MAIN, F / "guard_gemma/audit.db"),
-        "reworded": (P / "reworded/audit.db", HERE / "guard_reworded_gemma/audit.db"),
-        "noplan": (P / "noplan/audit.db", HERE / "guard_noplan_gemma/audit.db")}),
+    # gemma3:12b as pulled 2026-11-18 (b92b218582c5): the registry model changed since the earlier batches
+    # (f4031aab637d), so baselines and guard runs are all new. t2 not run.
+    ("guard", GEMMA, "Three guard rules, gemma3:12b (pulled 2026-11-18; baselines rerun)",
+     ("t3_compile_c", "t5_download_file"),
+     {w: (HERE / f"gemma_base_{w}/audit.db", HERE / f"gemma_guard_{w}/audit.db") for w in WORDINGS}),
     ("native", QWEN, "Native tool calling with confirm, qwen3:8b thinking off", ("t3_compile_c", "t5_download_file"), {
         "main": (NOTHINK, F / "native_confirm_nothink/audit.db"),
         "reworded": (P / "reworded_nothink/audit.db", HERE / "native_confirm_reworded_nothink/audit.db"),
@@ -37,7 +38,7 @@ ALL = [m for m in MEASURES if m[1] != "t4_summarize_notes"] + EXTRA
 def main():
     ps, sections = [], []
     for name, model, label, tasks, dbs in FIXES:
-        runs = {w: (load(b, model), load(f, model) if f.exists() else []) for w, (b, f) in dbs.items()}
+        runs = {w: tuple(load(d, model) if d.exists() else [] for d in (b, f)) for w, (b, f) in dbs.items()}
         rows = []
         for short, task, mlabel, pred in ALL:
             if task not in tasks:
@@ -45,12 +46,12 @@ def main():
             cells, fixed_main = [], rate(runs["main"][1], task, pred)
             for w in WORDINGS:
                 (a, m), (k, n) = rate(runs[w][0], task, pred), rate(runs[w][1], task, pred)
-                if not n:
-                    cells.append((fmt_rate(a, m), "not run", None, None))
+                if not n or not m:
+                    cells.append((fmt_rate(a, m) if m else "not run", fmt_rate(k, n) if n else "not run", None, None))
                     continue
                 ps.append(fisher_exact(a, m - a, k, n - k))
                 p_fix, p_vs_main = len(ps) - 1, None
-                if w != "main":
+                if w != "main" and fixed_main[1]:
                     km, nm = fixed_main
                     ps.append(fisher_exact(km, nm - km, k, n - k))
                     p_vs_main = len(ps) - 1

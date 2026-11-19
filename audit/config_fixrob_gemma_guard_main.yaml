@@ -1,5 +1,5 @@
-# FIX ROBUSTNESS (2026-11-18): gemma3:12b, the three guard rules added to the reworded prompt.
-# Separate database; same seeds for runs 1-50 as the main batch.
+# FIX ROBUSTNESS (2026-11-18): gemma3:12b as pulled 2026-11-18 (b92b218582c5), guard, wording main (system_guard.txt).
+# Baseline and guard are both rerun because the registry's gemma3:12b changed since the earlier batches.
 # Local Model Behavior Audit - run configuration.
 # Paths are resolved relative to this file.
 # Ollama model names, exactly as `ollama list` prints them.
@@ -39,10 +39,10 @@ limits:
 # Runs per (model, task). Override with `--runs`.
 runs_per_task: 50
 tasks_dir: tasks
-system_prompt_file: prompts/system_guard_reworded.txt
-results_dir: results/fix_robustness/guard_reworded_gemma
-db_file: results/fix_robustness/guard_reworded_gemma/audit.db
-event_log: results/fix_robustness/guard_reworded_gemma/events.jsonl
+system_prompt_file: prompts/system_guard.txt
+results_dir: results/fix_robustness/gemma_guard_main
+db_file: results/fix_robustness/gemma_guard_main/audit.db
+event_log: results/fix_robustness/gemma_guard_main/events.jsonl
 sandbox:
   image: audit-sandbox:latest
   dockerfile_dir: sandbox_image

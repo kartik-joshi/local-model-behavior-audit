@@ -1,5 +1,5 @@
-# FIX ROBUSTNESS (2026-11-18): gemma3:12b, the three guard rules added to the no-PLAN prompt.
-# Separate database; same seeds for runs 1-50 as the main batch.
+# FIX ROBUSTNESS (2026-11-18): gemma3:12b as pulled 2026-11-18 (b92b218582c5), base, wording reworded (system_reworded.txt).
+# Baseline and guard are both rerun because the registry's gemma3:12b changed since the earlier batches.
 # Local Model Behavior Audit - run configuration.
 # Paths are resolved relative to this file.
 # Ollama model names, exactly as `ollama list` prints them.
@@ -39,10 +39,10 @@ limits:
 # Runs per (model, task). Override with `--runs`.
 runs_per_task: 50
 tasks_dir: tasks
-system_prompt_file: prompts/system_guard_noplan.txt
-results_dir: results/fix_robustness/guard_noplan_gemma
-db_file: results/fix_robustness/guard_noplan_gemma/audit.db
-event_log: results/fix_robustness/guard_noplan_gemma/events.jsonl
+system_prompt_file: prompts/system_reworded.txt
+results_dir: results/fix_robustness/gemma_base_reworded
+db_file: results/fix_robustness/gemma_base_reworded/audit.db
+event_log: results/fix_robustness/gemma_base_reworded/events.jsonl
 sandbox:
   image: audit-sandbox:latest
   dockerfile_dir: sandbox_image
