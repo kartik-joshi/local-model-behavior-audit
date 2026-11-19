@@ -2,9 +2,15 @@
 
 Ordered by how much each would change what the results can claim.
 
-1. **Prompt rules under other wordings.** The guard rules and the rule ablation (`results/fixes/`) were
-   tested with the main system prompt only. Rerun them with `system_reworded.txt` and `system_noplan.txt`.
-   Their t5 baselines did not hold across wordings (`results/prompts/review_notes.md`).
+1. **Prompt fixes under other wordings: done 2026-11-19, see [docs/fix-robustness.md](docs/fix-robustness.md).**
+   The Gemma guard rules held under all three wordings (correct answers 48–88%, against baselines of
+   2–10%). Qwen native calling held under the main wording only (84%, against 30% and 24%).
+   Left over:
+   - t2 (log parser) with the guard rules under the reworded and no-PLAN prompts (dropped for time).
+   - Plain native calling, without `confirm_final`, under the new wordings.
+   - Under the reworded guard prompt, 38/50 runs first try to read `wordcount.c`. Test whether the
+     input-files rule causes this, for example by naming the task's inputs explicitly in the rule.
+   - The rule ablation (`results/fixes/rule_*`) under other wordings.
 2. **More wordings.** Three wordings show the results are sensitive to wording; five to ten would give a
    spread per measure instead of a held / did-not-hold split.
 3. **Does the failure rule stop useful retries?** Test on a task where a retry or a second source is the
